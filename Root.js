@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export default function Root() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Index" component={Index} />
+      <Stack.Screen name="Accueil" component={Index} />
       <Stack.Screen name="Infos" component={Infos} />
     </Stack.Navigator>
   );

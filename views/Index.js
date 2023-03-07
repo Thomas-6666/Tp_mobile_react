@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, ToastAndroid, View, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, ToastAndroid, View, Pressable, Platform } from 'react-native';
 import * as Location from 'expo-location';
 
 export default function Index({navigation}) {
@@ -19,11 +19,17 @@ export default function Index({navigation}) {
     setCoords(`${latitude},${longitude}`);
   }
 
-  const navigueVille = () => {
+  const navigueVille = async () => {
     if (ville == ""){
-      ToastAndroid.show('Veuillez entrer un nom de ville valide', ToastAndroid.SHORT);
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Veuillez entrer un nom de ville', ToastAndroid.SHORT);
+      } else {
+        alert('Veuillez entrer un nom de ville');
+      }
     } else {
       navigation.navigate("Infos", { ville: ville });
+      // let localisation = await Location.geocodeAsync(ville, LocationGeocodingOptions(false));
+      // console.log(localisation);
     }
   }
 
@@ -39,7 +45,7 @@ export default function Index({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{"Application\nmétéo GPS"}</Text>
-      <TextInput multiline style={styles.input} placeholder="Ville" value={ville} onChangeText={text => setVille(text)}/>
+      <TextInput style={styles.input} placeholder="Ville" value={ville} onChangeText={text => setVille(text)}/>
       <Pressable onPress={navigueVille} style={styles.btnvalidate}>
         <Text style={styles.textbtn}>Voir météo</Text>
       </Pressable>
@@ -68,11 +74,11 @@ const styles = StyleSheet.create({
   },
   input: {
     borderColor: "grey",
-    borderBottomWidth: 1,
+    borderWidth: 1,
     width: '70%',
     textAlign: 'center',
     fontSize: 32,
-    margin: 10,
+    margin: 20,
   },
   btnvalidate : {
     alignItems: 'center',
