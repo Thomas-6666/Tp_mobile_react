@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 
-export default function Infos({navigation}) {
+export default function Infos({route, navigation}) {
+  const ville = route.params.ville;
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Météo de ...</Text>
+      <Text style={styles.title}>Météo de {ville}</Text>
       <Pressable onPress={navigation.goBack} style={styles.btnback}>
         <Text style={styles.textbtn}>Retour à la recherche</Text>
       </Pressable>

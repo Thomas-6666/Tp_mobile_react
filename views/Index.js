@@ -1,35 +1,46 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { useToast } from 'react-native-toast-message';
 import * as Location from 'expo-location';
 
 export default function Index({navigation}) {
   const [ville, setVille] = useState('');
   const [coords, setCoords] = useState('');
 
-  useEffect(() => {
-    const localiseCoords = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      let latitude = location.coords.latitude;
-      let longitude = location.coords.longitude;
-      setCoords(`${latitude},${longitude}`);
+  const localiseCoords = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission to access location was denied');
+      return;
     }
+    let location = await Location.getCurrentPositionAsync({});
+    let latitude = location.coords.latitude;
+    let longitude = location.coords.longitude;
+    setCoords(`${latitude},${longitude}`);
+  }
 
-    localiseCoords();
-  }, []);
+  const showToast = () => {
+    show({
+      type: 'error',
+      text1: 'Veuillez entrer un nom de ville valide',
+      visibilityTime: 3000, // ms
+      autoHide: true,
+      topOffset: 30,
+      bottomOffset: 40,
+    });
+  };
 
   const navigueVille = () => {
-    console.log(ville);
-    navigation.navigate("Infos");
+    if (ville == ""){
+      showToast;
+    } else {
+      navigation.navigate("Infos", { ville: ville });
+    }
   }
-  
-  const navigueGPS = async () => {
-    await localiseCoords();
+
+  const navigueGPS = () => {
+    localiseCoords();
     console.log(coords);
     navigation.navigate("Infos");
   }
