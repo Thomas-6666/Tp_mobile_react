@@ -29,8 +29,11 @@ export default function Index({navigation}) {
 
   const navigueGPS = () => {
     localiseCoords();
-    console.log(coords);
-    navigation.navigate("Infos");
+    if (coords) {
+      console.log('Coordonnées : ' + coords);
+      console.log(`Longitude : ${coords.split(',')[0]} et Latitude : ${coords.split(',')[1]} `);
+    }
+    // navigation.navigate("Infos");
   }
 
   return (
@@ -41,7 +44,7 @@ export default function Index({navigation}) {
         <Text style={styles.textbtn}>Voir météo</Text>
       </Pressable>
       <Pressable onPress={navigueGPS} style={styles.btncoords}>
-        <Text style={styles.textbtn}>Détecter coordonnées GPS</Text>
+        <Text style={styles.textbtn}>Météo de la location actuelle</Text>
       </Pressable>
       <StatusBar style="auto"/>
     </View>
