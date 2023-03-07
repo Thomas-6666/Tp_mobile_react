@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
-import { useToast } from 'react-native-toast-message';
+import { StyleSheet, Text, TextInput, ToastAndroid, View, Pressable } from 'react-native';
 import * as Location from 'expo-location';
 
 export default function Index({navigation}) {
@@ -20,20 +19,9 @@ export default function Index({navigation}) {
     setCoords(`${latitude},${longitude}`);
   }
 
-  const showToast = () => {
-    show({
-      type: 'error',
-      text1: 'Veuillez entrer un nom de ville valide',
-      visibilityTime: 3000, // ms
-      autoHide: true,
-      topOffset: 30,
-      bottomOffset: 40,
-    });
-  };
-
   const navigueVille = () => {
     if (ville == ""){
-      showToast;
+      ToastAndroid.show('Veuillez entrer un nom de ville valide', ToastAndroid.SHORT);
     } else {
       navigation.navigate("Infos", { ville: ville });
     }
