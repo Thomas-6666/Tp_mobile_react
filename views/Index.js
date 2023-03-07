@@ -27,6 +27,16 @@ export default function Index({navigation}) {
         alert('Veuillez entrer un nom de ville');
       }
     } else {
+      /*const villeToCoords = () => {
+        fetch('https://api.example.com/data')
+          .then(response => response.json())
+          .then(data => {
+            const firstData = data[0];
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }*/
       navigation.navigate("Infos", { ville: ville });
       // let localisation = await Location.geocodeAsync(ville, LocationGeocodingOptions(false));
       // console.log(localisation);
