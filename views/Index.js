@@ -23,6 +23,16 @@ export default function Index({navigation}) {
     if (ville == ""){
       ToastAndroid.show('Veuillez entrer un nom de ville valide', ToastAndroid.SHORT);
     } else {
+      /*const villeToCoords = () => {
+        fetch('https://api.example.com/data')
+          .then(response => response.json())
+          .then(data => {
+            const firstData = data[0];
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }*/
       navigation.navigate("Infos", { ville: ville });
     }
   }
