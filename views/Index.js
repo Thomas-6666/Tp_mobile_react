@@ -37,7 +37,7 @@ export default function Index({navigation}) {
             console.error(error);
           });
       }*/
-      navigation.navigate("Infos", { ville: ville });
+      navigation.navigate("Infos", { data: ville, isVille: true });
       // let localisation = await Location.geocodeAsync(ville, LocationGeocodingOptions(false));
       // console.log(localisation);
     }
@@ -46,10 +46,9 @@ export default function Index({navigation}) {
   const navigueGPS = () => {
     localiseCoords();
     if (coords) {
-      console.log('Coordonnées : ' + coords);
-      console.log(`Longitude : ${coords.split(',')[0]} et Latitude : ${coords.split(',')[1]} `);
+      navigation.navigate("Infos", { data: coords, isVille: false });
     }
-    // navigation.navigate("Infos");
+    
   }
 
   return (

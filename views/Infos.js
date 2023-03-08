@@ -2,11 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 
 export default function Infos({route, navigation}) {
-  const ville = route.params.ville;
+  if (! route.params.isVille){
+    const coords = route.params.data;
+    //console.log(`Longitude : ${coords.split(',')[0]} et Latitude : ${coords.split(',')[1]} `);
+  }
   
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Météo de {ville}</Text>
+      <Text style={styles.title}>Météo de {route.params.data}</Text>
       <Pressable onPress={navigation.goBack} style={styles.btnback}>
         <Text style={styles.textbtn}>Retour à la recherche</Text>
       </Pressable>
