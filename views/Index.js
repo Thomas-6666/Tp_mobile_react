@@ -96,6 +96,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     backgroundColor: 'limegreen',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   btncoords: {
     alignItems: 'center',
@@ -105,6 +111,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: 'dodgerblue',
     margin: 30,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   textbtn: {
     fontSize: 16,
