@@ -47,6 +47,12 @@ export default function Index({navigation}) {
     localiseCoords();
     if (coords) {
       navigation.navigate("Infos", { data: coords, isVille: false });
+    } else {
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Impossible de détecter vos coordonnées', ToastAndroid.SHORT);
+      } else {
+        alert('Impossible de détecter vos coordonnées');
+      }
     }
     
   }
@@ -69,7 +75,7 @@ export default function Index({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'whitesmoke',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -120,6 +126,7 @@ const styles = StyleSheet.create({
   },
   textbtn: {
     fontSize: 16,
+    textAlign: 'center',
     fontWeight: 'bold',
     color: 'white',
   },

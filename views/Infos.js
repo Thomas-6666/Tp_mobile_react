@@ -13,8 +13,8 @@ export default function Infos({route, navigation}) {
 
   useEffect(() => {
     const fetchData = async () => {
-      var api ='https://api.open-meteo.com/v1/forecast?latitude=' + coords.split(',')[0] + '&longitude='
-      + coords.split(',')[1] + '&hourly=temperature_2m';
+      var api ='https://api.open-meteo.com/v1/forecast?latitude=' + coords.split(',')[0] + '&longitude=' + coords.split(',')[1]
+      + '&hourly=precipitation_probability&hourly=visibility&current_weather=true';
       const response = await fetch(api);
       const result = await response.json();
       setData(result);
@@ -26,37 +26,94 @@ export default function Infos({route, navigation}) {
   if (!data) {
     return <Text style={styles.title}>Chargement...</Text>;
   }
-
-  const getTemp = (data) => {
-    var date = new Date().toISOString().substring(0, 14) + "00";
+  
+  const getInfoHourly = (data, type) => {
+    var date = data["current_weather"]["time"];
     for (var i = 0; i < data["hourly"]["time"].length; i++){
       if (date == data["hourly"]["time"][i]){
-        return data["hourly"]["temperature_2m"][i] + "°C";
+        return data["hourly"][type][i] + " " + data["hourly_units"][type];
       }
     }
     return "Donnée indisponible";
   }
 
-  const Item = () => {
+  const ItemTemp = () => {
     return (
       <View style={styles.item}>
         <View style={styles.iconContainer}>
           <Icon style={styles.Icon} name="thermometer"/>
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.value}>Temperature : {getTemp(data)}</Text>
+          <Text style={styles.value}>Temperature : {data["current_weather"]["temperature"]} °C</Text>
         </View>
       </View>
     );
   };
 
+  const ItemVent = () => {
+    return (
+      <View style={styles.item}>
+        <View style={styles.iconContainer}>
+          <Icon style={styles.Icon} name="wind"/>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.value}>Vitesse du vent : {data["current_weather"]["windspeed"]} km/h</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const ItemDir = () => {
+    return (
+      <View style={styles.item}>
+        <View style={styles.iconContainer}>
+          <Icon style={styles.Icon} name="flag"/>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.value}>Direction du vent : {data["current_weather"]["winddirection"]} °</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const ItemPrec = () => {
+    return (
+      <View style={styles.item}>
+        <View style={styles.iconContainer}>
+          <Icon style={styles.Icon} name="cloud"/>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.value}>Précipitations : {getInfoHourly(data, "precipitation_probability")}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const ItemVisi = () => {
+    return (
+      <View style={styles.item}>
+        <View style={styles.iconContainer}>
+          <Icon style={styles.Icon} name="eye"/>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.value}>Visibilité : {getInfoHourly(data, "visibility")}</Text>
+        </View>
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Météo de {route.params.data}</Text>
       <View style={styles.listContainer}>
       <FlatList
-        data={Object.values(data.hourly)}
-        renderItem={({ item }) => <Item data={item} />}
+        data={[{type: 'temp'}, {type: 'vent'}, {type: 'dir'}, {type: 'prec'}, {type: 'visi'}]}
+        renderItem={({ item }) =>
+          item.type === 'temp' ? <ItemTemp data={data} />
+          : item.type === 'vent' ? <ItemVent data={data} />
+          : item.type === 'dir' ? <ItemDir data={data} />
+          : item.type === 'prec' ? <ItemPrec data={data} />
+          : <ItemVisi data={data} />
+        }
         keyExtractor={(item, index) => index.toString()}
       />
       </View>
@@ -78,6 +135,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    textAlign: 'center',
     marginVertical: 20,
   },
   listContainer: {
@@ -88,8 +146,9 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'snow',
+    backgroundColor: 'azure',
     borderRadius: 10,
+    marginHorizontal: 10,
     marginVertical: 8,
     paddingVertical: 10,
     shadowColor: 'black',
@@ -101,9 +160,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   iconContainer: {
-    backgroundColor: 'white',
     padding: 10,
-    borderRadius: 10,
   },
   icon: {
     color: 'black',
@@ -134,6 +191,7 @@ const styles = StyleSheet.create({
   },
   textbtn: {
     fontSize: 16,
+    textAlign: 'center',
     fontWeight: 'bold',
     color: 'white',
   },
