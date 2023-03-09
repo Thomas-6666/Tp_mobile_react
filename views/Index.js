@@ -6,18 +6,8 @@ import * as Location from 'expo-location';
 export default function Index({navigation}) {
   const [ville, setVille] = useState('');
   const [coords, setCoords] = useState('');
-
-  const localiseCoords = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Permission to access location was denied');
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    let latitude = location.coords.latitude;
-    let longitude = location.coords.longitude;
-    setCoords(`${latitude},${longitude}`);
-  }
+  const [isLoading, setIsLoading] = useState(false);
+  var btnPressGps = false;
 
   const navigueVille = async () => {
     if (ville == ""){
@@ -43,19 +33,34 @@ export default function Index({navigation}) {
     }
   }
 
-  const navigueGPS = () => {
-    localiseCoords();
-    if (coords) {
+  const navigueGPS = async () => {
+    btnPressGps == true;
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log("Accès impossible à la position car autorisation refusée");
+      return null;
+    }
+    setIsLoading(true);
+    let location = await Location.getCurrentPositionAsync();
+    let latitude = location.coords.latitude;
+    let longitude = location.coords.longitude;
+    setCoords(`${latitude},${longitude}`);
+    setIsLoading(false);
+  }
+  
+  useEffect(() => {
+    if (coords !== '') {
+      btnPressGps = false;
       navigation.navigate("Infos", { data: coords, isVille: false });
-    } else {
+    } else if (!isLoading && btnPressGps) {
+      btnPressGps = false;
       if (Platform.OS === 'android') {
         ToastAndroid.show('Impossible de détecter vos coordonnées', ToastAndroid.SHORT);
       } else {
         alert('Impossible de détecter vos coordonnées');
       }
     }
-    
-  }
+  }, [coords, isLoading]);
 
   return (
     <View style={styles.container}>
@@ -65,7 +70,7 @@ export default function Index({navigation}) {
         <Text style={styles.textbtn}>Voir météo</Text>
       </Pressable>
       <Pressable onPress={navigueGPS} style={styles.btncoords}>
-        <Text style={styles.textbtn}>Météo de la location actuelle</Text>
+        <Text style={styles.textbtn}>Météo de votre position</Text>
       </Pressable>
       <StatusBar style="auto"/>
     </View>

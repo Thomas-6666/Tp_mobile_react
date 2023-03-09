@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View, Text, Pressable } from 'react-native';
+import { FlatList, Image, StyleSheet, View, Text, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 export default function Infos({route, navigation}) {
@@ -25,6 +25,33 @@ export default function Infos({route, navigation}) {
 
   if (!data) {
     return <Text style={styles.title}>Chargement...</Text>;
+  }
+
+  const searchImage = (data) => {
+    var code = data["current_weather"]["weathercode"];
+    if (code >= 95 ) {
+      return 'orage.png'
+    } else if (code >= 81 || code <= 86) {
+      return 'averse.png'
+    } else if (code >= 71 || code <= 77) {
+      return 'neige.png'
+    } else if (code >= 61 || code <= 67) {
+      return 'pluie.png'
+    } else if (code >= 51 || code <= 57) {
+      return 'bruine.png'
+    } else if (code >= 45 || code <= 48) {
+      return 'brouillard.png'
+    } else if (code >= 1 || code <= 3) {
+      return 'nuage.png'
+    } else if (code == 0) {
+      if (new Date().getHours() >= 7 || new Date().getHours() <= 19) {
+        return 'soleil.png';
+      } else {
+        return 'lune.png'
+      }
+    } else {
+      return 'noimage.png'
+    }
   }
   
   const getInfoHourly = (data, type) => {
@@ -105,6 +132,7 @@ export default function Infos({route, navigation}) {
     <View style={styles.container}>
       <Text style={styles.title}>Météo de {route.params.data}</Text>
       <View style={styles.listContainer}>
+      <Image resizeMode='cover' source={require('../assets/images/' + searchImage(data))} style={styles.image}/>
       <FlatList
         data={[{type: 'temp'}, {type: 'vent'}, {type: 'dir'}, {type: 'prec'}, {type: 'visi'}]}
         renderItem={({ item }) =>
@@ -118,7 +146,7 @@ export default function Infos({route, navigation}) {
       />
       </View>
       <Pressable onPress={navigation.goBack} style={styles.btnback}>
-        <Text style={styles.textbtn}>Retour à la recherche</Text>
+        <Text style={styles.textbtn}>Retour</Text>
       </Pressable>
         <StatusBar style="auto"/>
     </View>
@@ -137,6 +165,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
+  },
+  image: {
+    margin: 'auto',
+    width: 100,
+    height: 100,
   },
   listContainer: {
     flex: 1,
