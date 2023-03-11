@@ -39,27 +39,27 @@ export default function Infos({route, navigation}) {
   const searchImage = (data) => {
     var code = data["current_weather"]["weathercode"];
     if (code >= 95 ) {
-      return 'orage.png'
+      return require('../assets/images/orage.png');
     } else if (code >= 81 && code <= 86) {
-      return 'averse.png'
+      return require('../assets/images/averse.png');
     } else if (code >= 71 && code <= 77) {
-      return 'neige.png'
+      return require('../assets/images/neige.png');
     } else if (code >= 61 && code <= 67) {
-      return 'pluie.png'
+      return require('../assets/images/pluie.png');
     } else if (code >= 51 && code <= 57) {
-      return 'bruine.png'
+      return require('../assets/images/bruine.png');
     } else if (code >= 45 && code <= 48) {
-      return 'brouillard.png'
+      return require('../assets/images/brouillard.png');
     } else if (code >= 1 && code <= 3) {
-      return 'nuage.png'
-    } else if (code == 0) {
+      return require('../assets/images/nuage.png');
+    } else if (code === 0) {
       if (new Date().getHours() >= 7 || new Date().getHours() <= 19) {
-        return 'soleil.png';
+        return require('../assets/images/soleil.png');
       } else {
-        return 'lune.png'
+        return require('../assets/images/lune.png');
       }
     } else {
-      return 'noimage.png'
+      return require('../assets/images/noimage.png');
     }
   }
   
@@ -141,7 +141,7 @@ export default function Infos({route, navigation}) {
     <View style={styles.container}>
       <Text style={styles.title}>Météo de {meteoDe}</Text>
       <View style={styles.listContainer}>
-      <Image resizeMode='cover' source={require('../assets/images/' + searchImage(data))} style={styles.image}/>
+      <Image resizeMode='cover' source={searchImage(data)} style={styles.image}/>
       <FlatList
         data={[{type: 'temp'}, {type: 'vent'}, {type: 'dir'}, {type: 'prec'}, {type: 'visi'}]}
         renderItem={({ item }) =>
