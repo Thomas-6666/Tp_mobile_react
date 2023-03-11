@@ -22,7 +22,7 @@ export default function Infos({route, navigation}) {
     };
 
     fetchData();
-  }, []);
+  }, [coords]);
 
   if (!data) {
     return <Text style={styles.title}>Chargement...</Text>;
