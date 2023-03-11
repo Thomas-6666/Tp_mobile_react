@@ -16,6 +16,7 @@ export default function Index({navigation}) {
     }
 };
 
+
 const navigueVille = async () => {
   if (ville == ""){
     if (Platform.OS === 'android') {
@@ -39,7 +40,7 @@ function geocodeCity(city) {
   setIsLoading(true);
   fetch(url, options)
     .then((response) => response.json())
-    .then((result) => {
+    .then((result) => { 
       if (result) {
         let latitude = result[0].latitude;
         let longitude = result[0].longitude;
@@ -75,6 +76,8 @@ function geocodeCity(city) {
   }
   
   useEffect(() => {
+    setVille('');
+    setCoords('');
     if (coords !== '') {
       btnPressGps = false;
       navigation.navigate("Infos", { data: coords, ville: ville, isVille: isVille });
