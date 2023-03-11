@@ -6,11 +6,15 @@ import Icon from 'react-native-vector-icons/Feather';
 export default function Infos({route, navigation}) {
   const [data, setData] = useState(null);
   var coords = "";
-  
+  var meteoDe = "";
 
   coords = route.params.data;
 
-  console.log('data : ' + route.params.data);
+  if (route.params.isVille == true) {
+    meteoDe = route.params.ville;
+  } else {
+    meteoDe = coords;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -135,7 +139,7 @@ export default function Infos({route, navigation}) {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Météo de {route.params.data}</Text>
+      <Text style={styles.title}>Météo de {meteoDe}</Text>
       <View style={styles.listContainer}>
       <Image resizeMode='cover' source={require('../assets/images/' + searchImage(data))} style={styles.image}/>
       <FlatList
@@ -173,6 +177,7 @@ const styles = StyleSheet.create({
   },
   image: {
     margin: 'auto',
+    marginBottom: 10,
     width: 100,
     height: 100,
   },
