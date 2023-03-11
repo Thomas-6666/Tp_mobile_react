@@ -27,7 +27,6 @@ const navigueVille = async () => {
     try {
       geocodeCity(ville);
       setIsVille(true);
-      console.log('setIsVille to true');
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -44,7 +43,6 @@ function geocodeCity(city) {
       if (result) {
         let latitude = result[0].latitude;
         let longitude = result[0].longitude;
-        console.log(`${latitude},${longitude}`); // Ajouter cette ligne pour déboguer
         setCoords(`${latitude},${longitude}`);
       } else {
         throw new Error('Failed to geocode city');
@@ -61,19 +59,19 @@ function geocodeCity(city) {
 
   const navigueGPS = async () => {
     btnPressGps == true;
-    setIsVille(false);
-    console.log('setIsVille to false');
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       console.log("Accès impossible à la position car autorisation refusée");
       return null;
+    } else {
+      setIsLoading(true);
+      let location = await Location.getCurrentPositionAsync();
+      let latitude = location.coords.latitude;
+      let longitude = location.coords.longitude;
+      setCoords(`${latitude},${longitude}`);
+      setIsLoading(false);
+      setIsVille(false);
     }
-    setIsLoading(true);
-    let location = await Location.getCurrentPositionAsync();
-    let latitude = location.coords.latitude;
-    let longitude = location.coords.longitude;
-    setCoords(`${latitude},${longitude}`);
-    setIsLoading(false);
   }
   
   useEffect(() => {
@@ -95,10 +93,10 @@ function geocodeCity(city) {
       <Text style={styles.title}>{"Application\nmétéo GPS"}</Text>
       <TextInput style={styles.input} placeholder="Recherchez une ville" value={ville} onChangeText={text => setVille(text)}/>
       <Pressable onPress={navigueVille} style={styles.btnvalidate}>
-        <Text style={styles.textbtn}>Voir météo</Text>
+        <Text style={styles.textbtn}>Météo de la ville recherchée</Text>
       </Pressable>
       <Pressable onPress={navigueGPS} style={styles.btncoords}>
-        <Text style={styles.textbtn}>Météo de votre position</Text>
+        <Text style={styles.textbtn}>Météo de votre position actuelle</Text>
       </Pressable>
       <StatusBar style="auto"/>
     </View>
@@ -123,6 +121,7 @@ const styles = StyleSheet.create({
   input: {
     borderColor: "grey",
     borderWidth: 1,
+    borderRadius: 5,
     width: '70%',
     textAlign: 'center',
     fontSize: 32,
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 4,
+    borderRadius: 5,
     backgroundColor: 'limegreen',
     shadowOffset: {
       width: 0,
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 4,
+    borderRadius: 5,
     backgroundColor: 'dodgerblue',
     margin: 30,
     shadowOffset: {

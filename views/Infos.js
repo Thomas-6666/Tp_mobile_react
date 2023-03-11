@@ -10,7 +10,7 @@ export default function Infos({route, navigation}) {
 
   coords = route.params.data;
 
-  console.log(route.params.isVille);
+  console.log('data : ' + route.params.data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,17 +36,17 @@ export default function Infos({route, navigation}) {
     var code = data["current_weather"]["weathercode"];
     if (code >= 95 ) {
       return 'orage.png'
-    } else if (code >= 81 || code <= 86) {
+    } else if (code >= 81 && code <= 86) {
       return 'averse.png'
-    } else if (code >= 71 || code <= 77) {
+    } else if (code >= 71 && code <= 77) {
       return 'neige.png'
-    } else if (code >= 61 || code <= 67) {
+    } else if (code >= 61 && code <= 67) {
       return 'pluie.png'
-    } else if (code >= 51 || code <= 57) {
+    } else if (code >= 51 && code <= 57) {
       return 'bruine.png'
-    } else if (code >= 45 || code <= 48) {
+    } else if (code >= 45 && code <= 48) {
       return 'brouillard.png'
-    } else if (code >= 1 || code <= 3) {
+    } else if (code >= 1 && code <= 3) {
       return 'nuage.png'
     } else if (code == 0) {
       if (new Date().getHours() >= 7 || new Date().getHours() <= 19) {
