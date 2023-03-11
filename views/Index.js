@@ -8,33 +8,61 @@ export default function Index({navigation}) {
   const [coords, setCoords] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   var btnPressGps = false;
+  const [isVille, setIsVille] = useState(false);
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-Api-Key': 'HbvoXiccBTmXK7OSLMWROg==cfhMwXKDyOIhxAFl'
+    }
+};
 
-  const navigueVille = async () => {
-    if (ville == ""){
-      if (Platform.OS === 'android') {
-        ToastAndroid.show('Veuillez entrer un nom de ville', ToastAndroid.SHORT);
-      } else {
-        alert('Veuillez entrer un nom de ville');
-      }
+const navigueVille = async () => {
+  if (ville == ""){
+    if (Platform.OS === 'android') {
+      ToastAndroid.show('Veuillez entrer un nom de ville', ToastAndroid.SHORT);
     } else {
-      /*const villeToCoords = () => {
-        fetch('https://api.example.com/data')
-          .then(response => response.json())
-          .then(data => {
-            const firstData = data[0];
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }*/
-      navigation.navigate("Infos", { data: ville, isVille: true });
-      // let localisation = await Location.geocodeAsync(ville, LocationGeocodingOptions(false));
-      // console.log(localisation);
+      alert('Veuillez entrer un nom de ville');
+    }
+  } else {
+    try {
+      geocodeCity(ville);
+      setIsVille(true);
+      console.log('setIsVille to true');
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
     }
   }
+}
+
+function geocodeCity(city) {
+  const url = `https://api.api-ninjas.com/v1/geocoding?city=${city}`;
+  setIsLoading(true);
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result) {
+        let latitude = result[0].latitude;
+        let longitude = result[0].longitude;
+        console.log(`${latitude},${longitude}`); // Ajouter cette ligne pour déboguer
+        setCoords(`${latitude},${longitude}`);
+      } else {
+        throw new Error('Failed to geocode city');
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      setIsLoading(false);
+      throw error;
+    });
+};
+
+
 
   const navigueGPS = async () => {
     btnPressGps == true;
+    setIsVille(false);
+    console.log('setIsVille to false');
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       console.log("Accès impossible à la position car autorisation refusée");
@@ -51,7 +79,7 @@ export default function Index({navigation}) {
   useEffect(() => {
     if (coords !== '') {
       btnPressGps = false;
-      navigation.navigate("Infos", { data: coords, isVille: false });
+      navigation.navigate("Infos", { data: coords, ville: ville, isVille: isVille });
     } else if (!isLoading && btnPressGps) {
       btnPressGps = false;
       if (Platform.OS === 'android') {
@@ -65,7 +93,7 @@ export default function Index({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{"Application\nmétéo GPS"}</Text>
-      <TextInput style={styles.input} placeholder="Ville" value={ville} onChangeText={text => setVille(text)}/>
+      <TextInput style={styles.input} placeholder="Recherchez une ville" value={ville} onChangeText={text => setVille(text)}/>
       <Pressable onPress={navigueVille} style={styles.btnvalidate}>
         <Text style={styles.textbtn}>Voir météo</Text>
       </Pressable>

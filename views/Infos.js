@@ -7,9 +7,10 @@ export default function Infos({route, navigation}) {
   const [data, setData] = useState(null);
   var coords = "";
   
-  if (! route.params.isVille){
-    coords = route.params.data;
-  }
+
+  coords = route.params.data;
+
+  console.log(route.params.isVille);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +26,10 @@ export default function Infos({route, navigation}) {
 
   if (!data) {
     return <Text style={styles.title}>Chargement...</Text>;
+  }
+
+  const goBackAndResetData = () => {
+    navigation.goBack();
   }
 
   const searchImage = (data) => {
@@ -145,7 +150,7 @@ export default function Infos({route, navigation}) {
         keyExtractor={(item, index) => index.toString()}
       />
       </View>
-      <Pressable onPress={navigation.goBack} style={styles.btnback}>
+      <Pressable onPress={goBackAndResetData} style={styles.btnback}>
         <Text style={styles.textbtn}>Retour</Text>
       </Pressable>
         <StatusBar style="auto"/>
