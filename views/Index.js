@@ -41,11 +41,16 @@ function geocodeCity(city) {
   fetch(url, options)
     .then((response) => response.json())
     .then((result) => { 
-      if (result) {
+      if (result[0] != null) {
         let latitude = result[0].latitude;
         let longitude = result[0].longitude;
         setCoords(`${latitude},${longitude}`);
       } else {
+        if (Platform.OS === 'android') {
+          ToastAndroid.show('Nom de ville incorrect', ToastAndroid.SHORT);
+        } else {
+          alert('Nom de ville incorrect');
+        }
         throw new Error('Failed to geocode city');
       }
     })
