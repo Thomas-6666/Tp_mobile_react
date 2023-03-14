@@ -20,9 +20,9 @@ export default function Index({navigation}) {
 const navigueVille = async () => {
   if (ville == ""){
     if (Platform.OS === 'android') {
-      ToastAndroid.show('Veuillez entrer un nom de ville', ToastAndroid.SHORT);
+      ToastAndroid.show('Veuillez entrer un nom de ville ou pays', ToastAndroid.SHORT);
     } else {
-      alert('Veuillez entrer un nom de ville');
+      alert('Veuillez entrer un nom de ville ou pays');
     }
   } else {
     try {
@@ -99,7 +99,7 @@ function geocodeCity(city) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{"Application\nmétéo GPS"}</Text>
-      <TextInput style={styles.input} placeholder="Recherchez une ville" value={ville} onChangeText={text => setVille(text)}/>
+      <TextInput style={styles.input} placeholder="Recherchez une ville ou pays" value={ville} onChangeText={text => setVille(text)}/>
       <Pressable onPress={navigueVille} style={styles.btnvalidate}>
         <Text style={styles.textbtn}>Météo de la ville recherchée</Text>
       </Pressable>
@@ -130,9 +130,9 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     borderWidth: 1,
     borderRadius: 5,
-    width: '70%',
+    width: '80%',
     textAlign: 'center',
-    fontSize: 32,
+    fontSize: 20,
     margin: 20,
   },
   btnvalidate : {
